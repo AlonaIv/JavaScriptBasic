@@ -7,7 +7,7 @@
 //'42number'
 
 null + 1
-// NaN
+// 1
 
 'five' + + 'two'
 // 'five' + NaN
@@ -54,3 +54,65 @@ true + false
 //'number15' + 3
 //'number153'
 
+undefined + 1;
+//NaN
+
+'true' == true
+//NaN == 1
+//false
+
+false == 'false'
+//0 == NaN
+//false
+
+null == ''
+//false
+
+3 ** (9 / 3);
+//3 ** 3
+//27
+
+!!'false' == !!'true'
+//!!true == !!true
+//!false == !false
+//true == true
+//true
+
+0 || '0' && 1
+//0 || 1
+//1
+
+1 < 2 < 3
+// true < 3
+// true
+
+'foo'+ + +'bar'
+//'foo' + + NaN
+//'foo' + NaN
+//'fooNaN'
+
+3 ** 2 / 3;
+//9 / 3
+//3
+
+1 < 2 > 3
+//true > 3
+//false
+
+(+null == false) < 1;
+// (0 === false) < 1
+// true < 1
+// false
+
+false && true || true
+// false || true
+// true
+
+false && (true || true);
+// false && true
+// false
+
+(+null == false) < 1 ** 5;
+// (0 == false) < 1**5
+// true < 1
+// false
