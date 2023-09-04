@@ -23,9 +23,7 @@ if (0 === parseInputInt % 3 && 0 === parseInputInt % 5) {
 const inputYear      = prompt('Enter year: ');
 const parseInputYear = parseInt(inputYear);
 
-if (0 === parseInputYear % 100 && 0 === parseInputYear % 400) {
-    console.log(parseInputYear + ' leap year');
-} else if (0 !== parseInputYear % 100 && 0 === parseInputYear % 4) {
+if (0 === parseInputYear % 400 || (0 !== parseInputYear % 100 && 0 === parseInputYear % 4)) {
     console.log(parseInputYear + ' leap year');
 } else {
     console.log(parseInputYear + ' isn\'t leap year');
@@ -39,7 +37,11 @@ if (0 === parseInputYear % 100 && 0 === parseInputYear % 400) {
 const inputUserAge         = prompt('Enter your age: ');
 const parseInputUserAge    = parseInt(inputUserAge);
 const parseInputUserAgeStr = String(parseInputUserAge);
-const lastInputNumber      = parseInputUserAgeStr[parseInputUserAgeStr.length - 1];
+let lastInputNumber        = parseInputUserAgeStr[parseInputUserAgeStr.length - 1];
+
+ if (parseInputUserAgeStr.length >=2 && ['11', '12', '13', '14'].includes(parseInputUserAgeStr.slice(-2))) {
+    lastInputNumber = parseInputUserAgeStr.slice(-2);
+ }
 
 switch (lastInputNumber) {
     case '1':
@@ -50,6 +52,10 @@ switch (lastInputNumber) {
     case '4':
         console.log('Вам ' + parseInputUserAgeStr + ' роки');
         break;
+    case '11':
+    case '12':
+    case '13':
+    case '14':
     default:
         console.log('Вам ' + parseInputUserAgeStr + ' років');
         break;
