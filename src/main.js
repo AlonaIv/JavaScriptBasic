@@ -1,75 +1,60 @@
-/**Вам необхідно написати програму, яка приймає на вхід число і виводить у консоль повідомлення у форматі: 
- * Число N є простим числом, якщо число N просте, та Число N не є простим числом, якщо число N складене. 
+/**
+ * Вам необхідно написати функцію reverseString(str), яка приймає на вхід рядок і повертає його у зворотному порядку.
  **/
 
-const inputInt      = prompt('Enter number: ');
-const parseInputInt = parseInt(inputInt);
+function reverseString(str) {
+    let reverseStr = '';
 
-let prime = true;
+    for (i = str.length - 1 ; i >= 0; i--) {
+        reverseStr += str[i];
+    }
 
-for (i = 2; i < parseInputInt; i++) {
-    if (parseInputInt % i === 0) prime = false;
+    return reverseStr;
 }
 
-if (true === prime && parseInputInt !== 1) {
-    console.log(`Число ${parseInputInt} є простим числом`);
-} else if (false === prime) {
-    console.log(`Число ${parseInputInt} є складеним числом`);
-} else {
-    console.log(`Число ${parseInputInt} є ні складеним, ні простим числом`);
-}
+// console.log(reverseString('test string'));
 
-/**Вам необхідно написати програму, 
- * яка приймає на вхід число N і знаходить усі числа в діапазоні від 1 до N, які є досконалими числами. 
+/**
+ * Вам необхідно написати функцію isPalindrome(str), яка приймає на вхід рядок і перевіряє, чи є введений рядок паліндромом.
  **/
 
-const inputIntSecondTask      = prompt('Enter number: ');
-const parseInputIntSecondTask = parseInt(inputIntSecondTask);
+function isPalindrome(str) {
+    const reverseStr = reverseString(str);
 
-let perfectNumbers = '';
+    return str === reverseStr ? `${str} це паліндромом.` : `${str} це не паліндромом.`
+}
 
-for (i = 1; i <= parseInputIntSecondTask; i++) {
-    let divisors = [];
-    let sum      = 0;
+// console.log(isPalindrome('wow'));
 
-    for (k = 1; k < i; k++) {
-        if (i % k === 0) {
-            sum += k;
+/**
+ * Вам необхідно написати функцію findGCD(a, b), яка приймає на вхід два числа і повертає їхній НСД.
+ **/
+
+function findGCD(a, b) {
+    let divisorsA  = [];
+    let divisorsB  = [];
+    let divisorsAB = [];
+
+    for (i = 1; i <= a; i++) {
+        if (0 === a % i) {
+            divisorsA.push(i);
         }
     }
 
-    if (sum === i) perfectNumbers = perfectNumbers + i + ' ';
+    for (k = 1; k <= b; k++) {
+        if (0 === b % k) {
+            divisorsB.push(k);
+        }
+    }
 
+    for (divisorA of divisorsA) {
+        if (true === divisorsB.includes(divisorA)) {
+            divisorsAB.push(divisorA);
+        }
+    }
+
+    return Math.max(...divisorsAB);
 }
 
-console.log(perfectNumbers);
-
-/**Вам необхідно написати програму, яка приймає на вхід число, що буде висотою вершини вашої ялинки. 
- * Уся ялинка має бути реалізована одним рядком (можна перевірити за допомогою alert у браузері):
-   *
-  ***
- *****
-*******
- */
-
-const inputHeight      = prompt('Enter height: ');
-const parseInputHeight = parseInt(inputHeight);
-
-let tree  = '';
-let stars ='*';
-
-for (i = 1; i <= parseInputHeight; i ++) {
-   for (spaces = 1; spaces <= parseInputHeight - i; spaces++) {
-    tree += ' ';
-   }
-
-   if (i === 1) {
-    stars = '*';
-   } else {
-    stars += '**';
-   }
-
-   tree += stars + '\n';
-}
-
-alert(tree);
+// console.log(findGCD(8778, 78));
+// console.log(findGCD(567, 6789));
