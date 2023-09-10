@@ -1,60 +1,54 @@
 /**
- * Вам необхідно написати функцію reverseString(str), яка приймає на вхід рядок і повертає його у зворотному порядку.
+ * Вам необхідно написати функцію doubleLetter(str), яка приймає на вхід рядок і повертає новий рядок, 
+ * у якому кожен символ повторюється двічі hello ⇒ hheelllloo.
  **/
 
-function reverseString(str) {
-    let reverseStr = '';
+function doubleLetter(str) {
+    const strLetters = str.split('');
+    let newStr       = '';
 
-    for (i = str.length - 1 ; i >= 0; i--) {
-        reverseStr += str[i];
+    for (srtLetter of strLetters) {
+        newStr += srtLetter + srtLetter;
     }
 
-    return reverseStr;
+    return newStr;
 }
 
-// console.log(reverseString('test string'));
+console.log(doubleLetter('hello'));
 
 /**
- * Вам необхідно написати функцію isPalindrome(str), яка приймає на вхід рядок і перевіряє, чи є введений рядок паліндромом.
- **/
+ * Вам необхідно написати функцію padString(str, length, symbol, toLeft), яка приймає на вхід рядок, число, що є довгим рядком, 
+ * який ми хочемо отримати в результаті та символ, яким доповниться рядок, якщо це буде потрібно, четвертим параметром є 
+ * буремний «прапор», чи додавати символи зліва або справа(за замовчуванням). 
+ * Якщо 2 параметр менше, ніж довжина вихідного рядка, то виводимо вихідний рядок без змін. 
+ * Приклад виклику: padString('Ivan', 6, '*') // 'Ivan**'.
+ */
 
-function isPalindrome(str) {
-    const reverseStr = reverseString(str);
+function padString(str, length, symbol, toLeft = false) {
+    if (false === toLeft) {
+        return str.padEnd(length, symbol);
+    }
 
-    return str === reverseStr ? `${str} це паліндромом.` : `${str} це не паліндромом.`
+    return str.padStart(length, symbol);
 }
 
-// console.log(isPalindrome('wow'));
+console.log(padString('Ivan', 6, '*'));
+console.log(padString('Ivan', 3, '+'));
+console.log(padString('Ivan', 8, '-', true));
 
 /**
- * Вам необхідно написати функцію findGCD(a, b), яка приймає на вхід два числа і повертає їхній НСД.
+ * Вам необхідно написати функцію camelCase(str, separator), яка приймає на вхід рядок і перетворює його до формату «camelCase» 
  **/
 
-function findGCD(a, b) {
-    let divisorsA  = [];
-    let divisorsB  = [];
-    let divisorsAB = [];
+function camelCase(str, separator) {
+    const strParts   = str.toLowerCase().split(separator);
+    let strCamelCase = '';
 
-    for (i = 1; i <= a; i++) {
-        if (0 === a % i) {
-            divisorsA.push(i);
-        }
+    for (strPart of strParts) {
+        strCamelCase += strPart.replace(strPart[0], strPart[0].toUpperCase())
     }
 
-    for (k = 1; k <= b; k++) {
-        if (0 === b % k) {
-            divisorsB.push(k);
-        }
-    }
-
-    for (divisorA of divisorsA) {
-        if (true === divisorsB.includes(divisorA)) {
-            divisorsAB.push(divisorA);
-        }
-    }
-
-    return Math.max(...divisorsAB);
+    return strCamelCase;
 }
 
-// console.log(findGCD(8778, 78));
-// console.log(findGCD(567, 6789));
+console.log(camelCase('some_str_EXAMPLE', '_'));
