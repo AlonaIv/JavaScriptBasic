@@ -1,0 +1,54 @@
+/**
+ * Вам необхідно написати функцію doubleLetter(str), яка приймає на вхід рядок і повертає новий рядок, 
+ * у якому кожен символ повторюється двічі hello ⇒ hheelllloo.
+ **/
+
+function doubleLetter(str) {
+    const strLetters = str.split('');
+    let newStr       = '';
+
+    for (srtLetter of strLetters) {
+        newStr += srtLetter.repeat(2);
+    }
+
+    return newStr;
+}
+
+console.log(doubleLetter('hello'));
+
+/**
+ * Вам необхідно написати функцію padString(str, length, symbol, toLeft), яка приймає на вхід рядок, число, що є довгим рядком, 
+ * який ми хочемо отримати в результаті та символ, яким доповниться рядок, якщо це буде потрібно, четвертим параметром є 
+ * буремний «прапор», чи додавати символи зліва або справа(за замовчуванням). 
+ * Якщо 2 параметр менше, ніж довжина вихідного рядка, то виводимо вихідний рядок без змін. 
+ * Приклад виклику: padString('Ivan', 6, '*') // 'Ivan**'.
+ */
+
+function padString(str, length, symbol, toLeft = false) {
+    if (false === toLeft) {
+        return str.padEnd(length, symbol);
+    }
+
+    return str.padStart(length, symbol);
+}
+
+console.log(padString('Ivan', 6, '*'));
+console.log(padString('Ivan', 3, '+'));
+console.log(padString('Ivan', 8, '-', true));
+
+/**
+ * Вам необхідно написати функцію camelCase(str, separator), яка приймає на вхід рядок і перетворює його до формату «camelCase» 
+ **/
+
+function camelCase(str, separator) {
+    const strParts   = str.toLowerCase().split(separator);
+    let strCamelCase = '';
+
+    for (strPart of strParts) {
+        strCamelCase += strPart.replace(strPart[0], strPart[0].toUpperCase())
+    }
+
+    return strCamelCase;
+}
+
+console.log(camelCase('some_str_EXAMPLE', '_'));

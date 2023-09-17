@@ -1,54 +1,75 @@
 /**
- * Вам необхідно написати функцію doubleLetter(str), яка приймає на вхід рядок і повертає новий рядок, 
- * у якому кожен символ повторюється двічі hello ⇒ hheelllloo.
- **/
-
-function doubleLetter(str) {
-    const strLetters = str.split('');
-    let newStr       = '';
-
-    for (srtLetter of strLetters) {
-        newStr += srtLetter + srtLetter;
-    }
-
-    return newStr;
-}
-
-console.log(doubleLetter('hello'));
-
-/**
- * Вам необхідно написати функцію padString(str, length, symbol, toLeft), яка приймає на вхід рядок, число, що є довгим рядком, 
- * який ми хочемо отримати в результаті та символ, яким доповниться рядок, якщо це буде потрібно, четвертим параметром є 
- * буремний «прапор», чи додавати символи зліва або справа(за замовчуванням). 
- * Якщо 2 параметр менше, ніж довжина вихідного рядка, то виводимо вихідний рядок без змін. 
- * Приклад виклику: padString('Ivan', 6, '*') // 'Ivan**'.
+ * Створіть функцію reverseArray, яка приймає масив і повертає новий масив, елементи якого розташовані у зворотному порядку.
  */
 
-function padString(str, length, symbol, toLeft = false) {
-    if (false === toLeft) {
-        return str.padEnd(length, symbol);
+function reverseArray(array) {
+    let newArray = [];
+
+    for (i = array.length - 1; i >= 0; i-- ) {
+        newArray.push(array[i]);
     }
 
-    return str.padStart(length, symbol);
+    return newArray;
 }
 
-console.log(padString('Ivan', 6, '*'));
-console.log(padString('Ivan', 3, '+'));
-console.log(padString('Ivan', 8, '-', true));
+const originalArray = [1, 2, 3, 4, 5];
+const reversedArray = reverseArray(originalArray);
+console.log(reversedArray); // [5, 4, 3, 2, 1]
 
 /**
- * Вам необхідно написати функцію camelCase(str, separator), яка приймає на вхід рядок і перетворює його до формату «camelCase» 
- **/
+ * Створіть функцію uniqueValues, яка приймає два масиви і повертає новий масив, що містить тільки унікальні значення з обох масивів (без дублікатів).
+ */
 
-function camelCase(str, separator) {
-    const strParts   = str.toLowerCase().split(separator);
-    let strCamelCase = '';
+function uniqueValues(array1, array2) {
+    let uniqueValuesArray = [];
 
-    for (strPart of strParts) {
-        strCamelCase += strPart.replace(strPart[0], strPart[0].toUpperCase())
+    for (i = 0; i < array1.length; i++) {
+        const curentElement = array1[i];
+        
+        if (false === uniqueValuesArray.includes(curentElement)) uniqueValuesArray.push(curentElement);
     }
 
-    return strCamelCase;
+    for (k = 0; k < array2.length; k++) {
+        const curentElement = array2[k];
+
+        if (false === uniqueValuesArray.includes(curentElement)) uniqueValuesArray.push(curentElement);
+    }
+
+    return uniqueValuesArray;
 }
 
-console.log(camelCase('some_str_EXAMPLE', '_'));
+const array1 = [1, 2, 3, 4, 5];
+const array2 = [3, 4, 5, 6, 7];
+const uniqueValuesArray = uniqueValues(array1, array2);
+console.log(uniqueValuesArray); // [1, 2, 3, 4, 5, 6, 7]
+
+/**
+ * Напишіть функцію calculateAverageGrade, яка приймає на вхід масив об'єктів з інформацією про студентів (ім'я, вік, середній бал) і повертає середній бал усіх студентів.
+ */
+
+function calculateAverageGrade(students) {
+    let studentGrades = [];
+    let gradesSum     = 0;
+
+    for (i = 0; i < students.length; i++) {
+        const currentStudentGrade = students[i]?.grade;
+
+        if (currentStudentGrade !== undefined) {
+            studentGrades.push(currentStudentGrade);
+        }
+    }
+
+    for (k = 0; k < studentGrades.length; k++) {
+        gradesSum += studentGrades[k];
+    }
+
+    return (gradesSum / students.length).toFixed(1);
+}
+
+const students = [
+	{ name: "Alice", age: 20, grade: 4.5 },
+	{ name: "Bob", age: 21, grade: 3.9 },
+	{ name: "Charlie", age: 19, grade: 4.8 }
+];
+
+console.log(calculateAverageGrade(students)); // 4.4
