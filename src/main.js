@@ -1,75 +1,72 @@
 /**
- * Створіть функцію reverseArray, яка приймає масив і повертає новий масив, елементи якого розташовані у зворотному порядку.
+ * Напишіть функцію capitalizeStrings, яка приймає на вхід масив рядків і повертає новий масив, 
+ * у якому кожен рядок має першу літеру у верхньому регістрі, а решту літер - у нижньому регістрі.
  */
 
-function reverseArray(array) {
+function capitalizeStrings(array) {
     let newArray = [];
 
-    for (i = array.length - 1; i >= 0; i-- ) {
-        newArray.push(array[i]);
-    }
+    array.forEach(element => {
+        element = element.toLowerCase();
+        element = element.replace(element[0], element[0].toUpperCase());
+
+        newArray.push(element);
+    });
 
     return newArray;
 }
 
-const originalArray = [1, 2, 3, 4, 5];
-const reversedArray = reverseArray(originalArray);
-console.log(reversedArray); // [5, 4, 3, 2, 1]
+const words = ["apple", "banaNA", "kiWi", "ORANGE"];
+console.log(capitalizeStrings(words)); // ["Apple", "Banana", "Kiwi", "Orange"]
 
 /**
- * Створіть функцію uniqueValues, яка приймає два масиви і повертає новий масив, що містить тільки унікальні значення з обох масивів (без дублікатів).
+ * Напишіть функцію findCommonElements, яка приймає на вхід два масиви і повертає новий масив, 
+ * що містить елементи, які є в обох вихідних масивах.
  */
 
-function uniqueValues(array1, array2) {
-    let uniqueValuesArray = [];
+function findCommonElements(array1, array2) {
+    let commonElements = [];
 
-    for (i = 0; i < array1.length; i++) {
-        const curentElement = array1[i];
-        
-        if (false === uniqueValuesArray.includes(curentElement)) uniqueValuesArray.push(curentElement);
-    }
+    array1.forEach(element => {
+        if (true === array2.includes(element)) {
+            commonElements.push(element);
+        }
+    });
 
-    for (k = 0; k < array2.length; k++) {
-        const curentElement = array2[k];
-
-        if (false === uniqueValuesArray.includes(curentElement)) uniqueValuesArray.push(curentElement);
-    }
-
-    return uniqueValuesArray;
+    return commonElements;
 }
 
 const array1 = [1, 2, 3, 4, 5];
 const array2 = [3, 4, 5, 6, 7];
-const uniqueValuesArray = uniqueValues(array1, array2);
-console.log(uniqueValuesArray); // [1, 2, 3, 4, 5, 6, 7]
+
+console.log(findCommonElements(array1, array2)); // [3, 4, 5]
 
 /**
- * Напишіть функцію calculateAverageGrade, яка приймає на вхід масив об'єктів з інформацією про студентів (ім'я, вік, середній бал) і повертає середній бал усіх студентів.
+ * Напишіть функцію analyzeArray, яка приймає на вхід масив чисел і повертає об'єкт з такими властивостями:
+ * 
+ * sum - сума всіх елементів масиву
+ * average - середнє значення елементів масиву
+ * min - мінімальне значення в масиві
+ * max - максимальне значення в масиві
  */
 
-function calculateAverageGrade(students) {
-    let studentGrades = [];
-    let gradesSum     = 0;
+function analyzeArray(array) {
+    let sum = 0;
+    
+    array.forEach(element => {
+        sum += element;
+    });
 
-    for (i = 0; i < students.length; i++) {
-        const currentStudentGrade = students[i]?.grade;
+    let average = sum/array.length;
 
-        if (currentStudentGrade !== undefined) {
-            studentGrades.push(currentStudentGrade);
-        }
-    }
-
-    for (k = 0; k < studentGrades.length; k++) {
-        gradesSum += studentGrades[k];
-    }
-
-    return (gradesSum / students.length).toFixed(1);
+    return {
+        sum: sum,
+        average: average,
+        min: Math.min(...array),
+        max: Math.max(...array)
+    };
 }
 
-const students = [
-	{ name: "Alice", age: 20, grade: 4.5 },
-	{ name: "Bob", age: 21, grade: 3.9 },
-	{ name: "Charlie", age: 19, grade: 4.8 }
-];
+const numbers = [1, 2, 3, 4, 5];
 
-console.log(calculateAverageGrade(students)); // 4.4
+console.log(analyzeArray(numbers)); // { sum: 15, average: 3, min: 1, max: 5 }
