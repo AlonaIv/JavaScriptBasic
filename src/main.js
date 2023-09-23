@@ -1,72 +1,107 @@
 /**
- * Напишіть функцію capitalizeStrings, яка приймає на вхід масив рядків і повертає новий масив, 
- * у якому кожен рядок має першу літеру у верхньому регістрі, а решту літер - у нижньому регістрі.
+ * Вам необхідно написати функцію, яка приймає на вхід масив чисел і повертає новий масив, 
+ * що містить тільки ті числа, які є простими числами.
  */
 
-function capitalizeStrings(array) {
-    let newArray = [];
+function chekIfPrimeNumber(number)
+{
+    if (number === 1 || number === 0) {
+        return false;
+    }
 
-    array.forEach(element => {
-        element = element.toLowerCase();
-        element = element.replace(element[0], element[0].toUpperCase());
+    for (i = 2; i < number; i++) {
+        if (number % i === 0) {
+            return false;
+        }
+    }
 
-        newArray.push(element);
-    });
-
-    return newArray;
+    return true;
 }
 
-const words = ["apple", "banaNA", "kiWi", "ORANGE"];
-console.log(capitalizeStrings(words)); // ["Apple", "Banana", "Kiwi", "Orange"]
+function getPrimeNumbers(numbers) {
+    let simpleNumbers = [];
 
-/**
- * Напишіть функцію findCommonElements, яка приймає на вхід два масиви і повертає новий масив, 
- * що містить елементи, які є в обох вихідних масивах.
- */
-
-function findCommonElements(array1, array2) {
-    let commonElements = [];
-
-    array1.forEach(element => {
-        if (true === array2.includes(element)) {
-            commonElements.push(element);
+    numbers.forEach(element => {
+        if (true === chekIfPrimeNumber(element)) {
+            simpleNumbers.push(element);
         }
     });
 
-    return commonElements;
+    return simpleNumbers;
 }
 
-const array1 = [1, 2, 3, 4, 5];
-const array2 = [3, 4, 5, 6, 7];
+numbersArray = [1, 3, 2, 5, 6, 18, 19, 23, 13, 16, 25, 0];
 
-console.log(findCommonElements(array1, array2)); // [3, 4, 5]
+console.log('Task1', getPrimeNumbers(numbersArray));
 
 /**
- * Напишіть функцію analyzeArray, яка приймає на вхід масив чисел і повертає об'єкт з такими властивостями:
- * 
- * sum - сума всіх елементів масиву
- * average - середнє значення елементів масиву
- * min - мінімальне значення в масиві
- * max - максимальне значення в масиві
+ * Вам необхідно написати функцію, яка приймає на вхід масив об'єктів, 
+ * де кожен об'єкт описує сповіщення та має поля source / text / date. 
+ * Вам необхідно перетворити цей масив на об'єкт, де ключем буде джерело сповіщення, 
+ * а значенням - масив сповіщень із цього джерела.
  */
 
-function analyzeArray(array) {
-    let sum = 0;
-    
-    array.forEach(element => {
-        sum += element;
+function getNotificationsForEachSource(notifications) {
+    let notificationsGroups = {};
+
+    notifications.forEach(element => {
+        let curentSource = element.source;
+
+        if (false === curentSource in notificationsGroups) {
+            notificationsGroups[curentSource] = [];
+        }
+
+        notificationsGroups[curentSource].push(element);
     });
 
-    let average = sum/array.length;
-
-    return {
-        sum: sum,
-        average: average,
-        min: Math.min(...array),
-        max: Math.max(...array)
-    };
+    return notificationsGroups;
 }
 
-const numbers = [1, 2, 3, 4, 5];
+let notifications = [
+    {source: 'api', text: 'Hello!', date: '2023-01-21T20:34:45P'},
+    {source: 'messenger', text: 'Can you help me?', date: '2023-04-23T21:04:05P'},    
+    {source: 'api', text: 'Have a question.', date: '2022-07-08T10:05:56P'},
+    {source: 'phone', text: 'My phone doesn\'t work', date: '2020-02-05T20:34:45P'},
+    {source: 'messenger', text: 'Hello again!', date: '2023-04-23T21:04:05P'},
+    {source: 'instagram', text: 'By!', date: '2023-01-03T20:34:45P'},
+    {source: 'phone', text: 'Ok', date: '2023-02-01T13:35:39P'},
+    {source: 'instagram', text: ':)', date: '2023-01-03T20:34:45P'},
+];
 
-console.log(analyzeArray(numbers)); // { sum: 15, average: 3, min: 1, max: 5 }
+console.log('Task2', getNotificationsForEachSource(notifications));
+
+/**
+ * Вам необхідно написати функцію, яка приймає на вхід масив і повністю повторює поведінку методу масиву group (якби він був)
+ */
+
+function group(array, callback) {
+    let arrayGroups = {};
+
+    array.forEach(element => {
+        let curentParam = callback(element);
+    
+            if (false === curentParam in arrayGroups) {
+                arrayGroups[curentParam] = [];
+            }
+    
+            arrayGroups[curentParam].push(element);
+        });
+    
+        return arrayGroups;
+}
+
+// console.log('Task3, notifications group by source',group(notifications, ({source}) => source));
+// console.log('Task3, notifications group by date', group(notifications, ({date}) => date));
+
+const people = [
+    {name: 'Alona', lastName: 'Ivanova', age: 23},
+    {name: 'Kyrylo', lastName: 'Bohachov', age: 23},
+    {name: 'Alona', lastName: 'Chelepis', age: 22},
+    {name: 'Kyrylo', lastName: 'Ivanov', age: 21},
+    {name: 'Alina', lastName: 'Ivanova', age: 22},
+    {name: 'Oleg', lastName: 'Bohachov', age: 30},
+]
+
+// console.log('Task3, people group by name', group(people, ({name}) => name));
+// console.log('Task3, people group by lastName', group(people, ({lastName}) => lastName));
+console.log('Task3, people group by age', group(people, ({age}) => age));
