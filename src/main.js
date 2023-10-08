@@ -1,77 +1,8 @@
 /**
- * Вам необхідно написати функцію, яка приймає на вхід масив чисел і повертає новий масив, 
- * що містить тільки ті числа, які є простими числами.
- */
-
-function chekIfPrimeNumber(number)
-{
-    if (number === 1 || number === 0) {
-        return false;
-    }
-
-    for (i = 2; i < number; i++) {
-        if (number % i === 0) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function getPrimeNumbers(numbers) {
-    let simpleNumbers = [];
-
-    numbers.forEach(element => {
-        if (true === chekIfPrimeNumber(element)) {
-            simpleNumbers.push(element);
-        }
-    });
-
-    return simpleNumbers;
-}
-
-numbersArray = [1, 3, 2, 5, 6, 18, 19, 23, 13, 16, 25, 0];
-
-console.log('Task1', getPrimeNumbers(numbersArray));
-
-/**
- * Вам необхідно написати функцію, яка приймає на вхід масив об'єктів, 
- * де кожен об'єкт описує сповіщення та має поля source / text / date. 
- * Вам необхідно перетворити цей масив на об'єкт, де ключем буде джерело сповіщення, 
- * а значенням - масив сповіщень із цього джерела.
- */
-
-function getNotificationsForEachSource(notifications) {
-    let notificationsGroups = {};
-
-    notifications.forEach(element => {
-        let curentSource = element.source;
-
-        if (false === curentSource in notificationsGroups) {
-            notificationsGroups[curentSource] = [];
-        }
-
-        notificationsGroups[curentSource].push(element);
-    });
-
-    return notificationsGroups;
-}
-
-let notifications = [
-    {source: 'api', text: 'Hello!', date: '2023-01-21T20:34:45P'},
-    {source: 'messenger', text: 'Can you help me?', date: '2023-04-23T21:04:05P'},    
-    {source: 'api', text: 'Have a question.', date: '2022-07-08T10:05:56P'},
-    {source: 'phone', text: 'My phone doesn\'t work', date: '2020-02-05T20:34:45P'},
-    {source: 'messenger', text: 'Hello again!', date: '2023-04-23T21:04:05P'},
-    {source: 'instagram', text: 'By!', date: '2023-01-03T20:34:45P'},
-    {source: 'phone', text: 'Ok', date: '2023-02-01T13:35:39P'},
-    {source: 'instagram', text: ':)', date: '2023-01-03T20:34:45P'},
-];
-
-console.log('Task2', getNotificationsForEachSource(notifications));
-
-/**
- * Вам необхідно написати функцію, яка приймає на вхід масив і повністю повторює поведінку методу масиву group (якби він був)
+ * Вам необхідно використовувати масив нотифікацій з минулих занять. 
+ * До отриманого під час групування об'єкта notifications, вам необхідно додати ітератор, 
+ * щоб під час перебору в циклі for of ми отримували кожен елемент із вкладених списків об'єкта notifications таким чином, 
+ * немов працюємо з "плоским" масивом.
  */
 
 function group(array, callback) {
@@ -90,18 +21,81 @@ function group(array, callback) {
         return arrayGroups;
 }
 
-// console.log('Task3, notifications group by source',group(notifications, ({source}) => source));
-// console.log('Task3, notifications group by date', group(notifications, ({date}) => date));
+let notifications = [
+    {source: 'api', text: 'Hello!', date: '2023-01-21T20:34:45P'},
+    {source: 'messenger', text: 'Can you help me?', date: '2023-04-23T21:04:05P'},    
+    {source: 'api', text: 'Have a question.', date: '2022-07-08T10:05:56P'},
+    {source: 'phone', text: 'My phone doesn\'t work', date: '2020-02-05T20:34:45P'},
+    {source: 'messenger', text: 'Hello again!', date: '2023-04-23T21:04:05P'},
+    {source: 'instagram', text: 'By!', date: '2023-01-03T20:34:45P'},
+    {source: 'phone', text: 'Ok', date: '2023-02-01T13:35:39P'},
+    {source: 'instagram', text: ':)', date: '2023-01-03T20:34:45P'},
+];
 
-const people = [
-    {name: 'Alona', lastName: 'Ivanova', age: 23},
-    {name: 'Kyrylo', lastName: 'Bohachov', age: 23},
-    {name: 'Alona', lastName: 'Chelepis', age: 22},
-    {name: 'Kyrylo', lastName: 'Ivanov', age: 21},
-    {name: 'Alina', lastName: 'Ivanova', age: 22},
-    {name: 'Oleg', lastName: 'Bohachov', age: 30},
-]
+let groupedObject = group(notifications, ({source}) => source);
 
-// console.log('Task3, people group by name', group(people, ({name}) => name));
-// console.log('Task3, people group by lastName', group(people, ({lastName}) => lastName));
-console.log('Task3, people group by age', group(people, ({age}) => age));
+groupedObject[Symbol.iterator] = function() {
+    let values     = [];
+    let valueIndex = 0;
+
+    for (const key in this) {
+        this[key].forEach(element => {
+            values.push(element);
+        });
+    }
+
+    return {
+      next() {
+        if (valueIndex === values.length) {
+            return {done:true}
+        }
+
+        return {
+            done:false,
+            value: values[valueIndex++]
+        }
+      }
+    };
+  };
+
+  for (const notification of groupedObject) {
+    console.log(notification);
+  }
+
+/**
+ * Вам необхідно реалізувати функцію memoize(fn), яка приймає вхід функцію і додає їй можливість кешування результатів виконання, 
+ * щоб уникнути повторних обчислень. Це означає, що в разі, коли функція викликається з однаковими параметрами, 
+ * то результат необхідно брати з кешу. (Тільки примітиви у параметрах та використовуйте Map)
+ */
+
+function memoize(fn) {
+    const cache = new Map();
+  
+    return function (...args) {
+        let key = args.toString();
+
+      if (cache.has(key)) {
+        return cache.get(key);
+      } else {
+        const result = fn(...args);
+        cache.set(key, result);
+
+        return result;
+      }
+    };
+  }
+  
+  let functionAdd = function add(a, b) {
+    console.log("Inside a function");
+
+    return a + b;
+  }
+    
+  let memoizeForFunctionAdd = memoize(functionAdd);
+
+  console.log(memoizeForFunctionAdd(1, 2));
+  console.log(memoizeForFunctionAdd(1, 2));
+  console.log(memoizeForFunctionAdd(2, 3));
+  console.log(memoizeForFunctionAdd(1, 2));
+  console.log(memoizeForFunctionAdd(4, 5));
+  
