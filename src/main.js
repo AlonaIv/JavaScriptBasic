@@ -1,101 +1,50 @@
-/**
- * Вам необхідно використовувати масив нотифікацій з минулих занять. 
- * До отриманого під час групування об'єкта notifications, вам необхідно додати ітератор, 
- * щоб під час перебору в циклі for of ми отримували кожен елемент із вкладених списків об'єкта notifications таким чином, 
- * немов працюємо з "плоским" масивом.
+/** 
+ * Вам необхідно написати функцію-декоратор logArguments(fn), 
+ * яка приймає на вхід функцію і додає можливість логувати всі аргументи, передані у функцію-аргумент.
  */
 
-function group(array, callback) {
-    let arrayGroups = {};
+function logArguments(fn) {
+    return function (...args) {
+      console.log('Log all args: ', args.join(', '));
 
-    array.forEach(element => {
-        let curentParam = callback(element);
-    
-            if (false === curentParam in arrayGroups) {
-                arrayGroups[curentParam] = [];
-            }
-    
-            arrayGroups[curentParam].push(element);
-        });
-    
-        return arrayGroups;
+      return fn(...args);
+    }
 }
 
-let notifications = [
-    {source: 'api', text: 'Hello!', date: '2023-01-21T20:34:45P'},
-    {source: 'messenger', text: 'Can you help me?', date: '2023-04-23T21:04:05P'},    
-    {source: 'api', text: 'Have a question.', date: '2022-07-08T10:05:56P'},
-    {source: 'phone', text: 'My phone doesn\'t work', date: '2020-02-05T20:34:45P'},
-    {source: 'messenger', text: 'Hello again!', date: '2023-04-23T21:04:05P'},
-    {source: 'instagram', text: 'By!', date: '2023-01-03T20:34:45P'},
-    {source: 'phone', text: 'Ok', date: '2023-02-01T13:35:39P'},
-    {source: 'instagram', text: ':)', date: '2023-01-03T20:34:45P'},
-];
+let fun = (a, b) => a + b;
 
-let groupedObject = group(notifications, ({source}) => source);
+const funWithLog = logArguments(fun);
 
-groupedObject[Symbol.iterator] = function() {
-    let values     = [];
-    let valueIndex = 0;
-
-    for (const key in this) {
-        this[key].forEach(element => {
-            values.push(element);
-        });
-    }
-
-    return {
-      next() {
-        if (valueIndex === values.length) {
-            return {done:true}
-        }
-
-        return {
-            done:false,
-            value: values[valueIndex++]
-        }
-      }
-    };
-  };
-
-  for (const notification of groupedObject) {
-    console.log(notification);
-  }
+console.log('Sum task 1: ', funWithLog(2, 4, 5));
 
 /**
- * Вам необхідно реалізувати функцію memoize(fn), яка приймає вхід функцію і додає їй можливість кешування результатів виконання, 
- * щоб уникнути повторних обчислень. Це означає, що в разі, коли функція викликається з однаковими параметрами, 
- * то результат необхідно брати з кешу. (Тільки примітиви у параметрах та використовуйте Map)
+ * Вам необхідно написати функцію-декоратор validate(fn, validator), 
+ * яка приймає на вхід функцію і додає можливість перевіряти аргументи, 
+ * передані у функцію fn, на відповідність заданому validator.
+ * Якщо аргументи не проходять перевірку, то декоратор має викидати виняток.
  */
 
-function memoize(fn) {
-    const cache = new Map();
-  
+function validate(fn, validator) {
     return function (...args) {
-        let key = args.toString();
-
-      if (cache.has(key)) {
-        return cache.get(key);
+      if (true === validator(args)) {
+        return fn(...args);
       } else {
-        const result = fn(...args);
-        cache.set(key, result);
-
-        return result;
+        return 'Incorrect values. Should be a numbers.';
       }
-    };
-  }
-  
-  let functionAdd = function add(a, b) {
-    console.log("Inside a function");
+    }
+}
 
-    return a + b;
+function NumberValidator (array) {
+  for (const arg of array) {
+    if (typeof arg !== 'number') {
+      return false;
+    }
   }
-    
-  let memoizeForFunctionAdd = memoize(functionAdd);
 
-  console.log(memoizeForFunctionAdd(1, 2));
-  console.log(memoizeForFunctionAdd(1, 2));
-  console.log(memoizeForFunctionAdd(2, 3));
-  console.log(memoizeForFunctionAdd(1, 2));
-  console.log(memoizeForFunctionAdd(4, 5));
-  
+  return true;
+}
+
+const funWithValidator = validate(fun, NumberValidator);
+
+console.log('Sum task 2: ', funWithValidator(3, 5));
+console.log('Sum task 2 with incorrect arg: ', funWithValidator(3, '34'));
