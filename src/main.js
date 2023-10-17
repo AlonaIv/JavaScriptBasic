@@ -1,50 +1,67 @@
-/** 
- * Вам необхідно написати функцію-декоратор logArguments(fn), 
- * яка приймає на вхід функцію і додає можливість логувати всі аргументи, передані у функцію-аргумент.
+/**
+ * Вам необхідно написати функцію summarize(num), 
+ * яка приймає на вхід число і повертає функцію, 
+ * яка під час виклику додає це число до аргументу і повертає результат. 
+ * Якщо аргумент не передано, то додається одиниця. Наприклад, якщо функція викликається з аргументом 5, 
+ * то функція, що повертається, повинна при виклику з аргументом3повернути8(тому що3 + 5 = 8) або6, якщо аргумент не буде передано.
  */
 
-function logArguments(fn) {
-    return function (...args) {
-      console.log('Log all args: ', args.join(', '));
+function summarize(argument) {
+  let arg = argument;
 
-      return fn(...args);
-    }
+  return function (number = 1) {
+    arg += number;
+
+    return arg;
+  }
 }
 
-let fun = (a, b) => a + b;
+const sum = summarize(1);
 
-const funWithLog = logArguments(fun);
-
-console.log('Sum task 1: ', funWithLog(2, 4, 5));
+console.log('task1', sum(3)); //4
+console.log('task1', sum());  //5
+console.log('task1', sum(5)); //10
+console.log('task1', sum(7)); //17
+console.log('task1', sum(9)); //26
 
 /**
- * Вам необхідно написати функцію-декоратор validate(fn, validator), 
- * яка приймає на вхід функцію і додає можливість перевіряти аргументи, 
- * передані у функцію fn, на відповідність заданому validator.
- * Якщо аргументи не проходять перевірку, то декоратор має викидати виняток.
+ * Вам необхідно написати функцію counter(startValue, step), 
+ * яка приймає на вхід два параметри - стартове значення лічильника і його крок. 
+ * Функція повертає нову функцію, яка при кожному виклику збільшує лічильник на значення і повертає його поточне значення. 
+ * Лічильник повинен мати методи increment, decrement і reset, які збільшують або зменшують значення на stepі 
+ * скидають значення до стартового, відповідно.
  */
 
-function validate(fn, validator) {
-    return function (...args) {
-      if (true === validator(args)) {
-        return fn(...args);
-      } else {
-        return 'Incorrect values. Should be a numbers.';
-      }
-    }
-}
+function counter(startValue, step) {
+  let count = startValue;
 
-function NumberValidator (array) {
-  for (const arg of array) {
-    if (typeof arg !== 'number') {
-      return false;
-    }
+  function counChange() {}
+
+  counChange.increment = function () {
+    count += step;
+
+    return count;
   }
 
-  return true;
+  counChange.decrement = function () {
+    count -= step;
+
+    return count;
+  }
+
+  counChange.reset = function () {
+    count = startValue;
+
+    return count;
+  }
+
+  return counChange;
 }
 
-const funWithValidator = validate(fun, NumberValidator);
+const newCounter = counter(1, 5);
 
-console.log('Sum task 2: ', funWithValidator(3, 5));
-console.log('Sum task 2 with incorrect arg: ', funWithValidator(3, '34'));
+console.log('task2', newCounter.increment()); //6
+console.log('task2', newCounter.increment()); //11
+console.log('task2', newCounter.decrement()); //6
+console.log('task2', newCounter.reset());     //1
+console.log('task2', newCounter.increment()); //5
