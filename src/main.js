@@ -1,262 +1,362 @@
 /**
- * Вам необхідно створити конструктор Студента, у якого мають бути властивості: 
- * ім'я,прізвище,рік народження,оцінки,відвідуваність,курс. 
- * Кількість оцінок і відвіданих занять залежить від курсу, на якому займається студент. 
- * Так само у Студент є методи: додати оцінку,додати відвідування,отримати середню успішність,
- * отримати середнє відвідування,отримати кількість пройдених занять,змінити курс(мають оновитися дані про курс), 
- * а такожотримати всю інформацію про студента.
+ * Вам необхідно написати додаток Todo list, використовуючи синтаксис класів. 
+ * У списку нотаток повинні бути методи для додавання нової нотатки, видалення, редагування та отримання повної інформації про нотатку, 
+ * а так само отримання списку всіх нотаток. Крім цього, у користувача має бути можливість позначити замітку, як виконану, 
+ * і отримання інформації про те, скільки всього нотаток у списку і скільки залишилося невиконань. 
+ * Нотатки не повинні бути порожніми.
  */
 
-function Student(name, lastName, yearOfBirth, course) {
-  this.name        = name;
-  this.lastName    = lastName;
-  this.yearOfBirth = yearOfBirth;
-  this.grades      = [];
-  this.attendance  = [];
-  this.course      = course;
+class ToDoList {
+  static DEFAULT_COMPLETED = false;
 
-  this.addGrade = function(grade) {
-    this.grades.push(grade);
+  constructor() {
+    this.notes = [];
   }
 
-  this.addAttendance = function(isPresent) {
-    this.attendance.push(isPresent);
-  }
-
-  this.getAverageGrade = function() {
-    let gradesSum = 0;
-    const length  = this.grades.length;
-
-    if (0 === length) {
-      return 0;
+  addNote(text) {
+    if (true === this.checkIsEmptyStr(text)) {
+      return;
     }
 
-    this.grades.forEach(element => gradesSum += element);
+    const newNote = {
+      text: text,
+      completed: ToDoList.DEFAULT_COMPLETED
+    };
 
-    return gradesSum/length;
+    this.notes.push(newNote);
+
+    console.log(`New note "${newNote.text}" with index ${this.notes.indexOf(newNote)}.`);
   }
 
-  this.getAverageAttendance = function() {
-    const length = this.attendance.length;
-
-    if (0 === length) {
-      return 0;
+  removeNote(index) {
+    if(false === this.checkIndex(index)) {
+      return;
     }
 
-    let countIsPresent = this.attendance.filter((isPresent) => isPresent).length;
+    this.notes.splice(index, 1);
 
-    return countIsPresent/length * 100;
+    console.log('Removed');
   }
 
-  this.changeCourse = function(newCourse) {
-    this.course     = newCourse;
-    this.grades     = [];
-    this.attendance = [];
-  }
-
-  this.getStudentInfo = function() {
-    return {
-      name: this.name,
-      lastName: this.lastName,
-      yearOfBirth: this.yearOfBirth,
-      course: this.course,
-      grades: this.grades,
-      attendance: this.attendance
-  };
-  }
-}
-
-console.log('----- Task 1 ------');
-
-const student1 = new Student("Alona", "Ivanova", 2000, 2);
-student1.addGrade(90);
-student1.addGrade(85);
-student1.addAttendance(true);
-student1.addAttendance(true);
-student1.addAttendance(false);
-console.log('AverageGrade student1: ', student1.getAverageGrade());
-console.log('AverageAttendance student1: ', student1.getAverageAttendance());
-console.log('StudentInfo student1: ', student1.getStudentInfo());
-student1.changeCourse(3);
-console.log('StudentInfo student1: ', student1.getStudentInfo());
-
-/**
- * Додати Студенту можливість навчатися на кількох курсах з можливістю додавання і видалення курсу.
- */
-
-function NewStudent(name, lastName, yearOfBirth, courses) {
-  this.name        = name;
-  this.lastName    = lastName;
-  this.yearOfBirth = yearOfBirth;
-  this.courses     = {};
-
-  courses.forEach(element => {
-    if(false === element in this.courses) {
-      this.courses[element] = {
-        grades: [],
-        attendance: []
-      }
-    }
-  });
-
-  this.addGrade = function(grade, course) {
-    if (true === course in this.courses) {
-      this.courses[course].grades.push(grade);
-    }
-  }
-
-  this.addAttendance = function(isPresent, course) {
-    if (true === course in this.courses) {
-      this.courses[course].attendance.push(isPresent);
-    }  
-  }
-
-  this.getAverageGrade = function(course) {
-    if (true === course in this.courses) {
-      let gradesSum = 0;
-      const length  = this.courses[course].grades.length;
-
-    if (0 === length) {
-      return 0;
+  editNote(index, newText) {
+    if(false === this.checkIndex(index) || true === this.checkIsEmptyStr(newText)) {
+      return;
     }
 
-    this.courses[course].grades.forEach(element => gradesSum += element);
+    this.notes[index].text = newText;
 
-    return gradesSum/length;
+    console.log('Edited');
+  }
+
+  getNoteInfo(index) {
+    if(false === this.checkIndex(index)) {
+      return;
     }
+
+    const note = this.notes[index];
+
+    console.log(`Note text: ${note.text}. Status: ${note.completed ? "Done" : "In Progress"}.`)
   }
 
-  this.getAverageAttendance = function(course) {
-    if (true === course in this.courses) {
-      const length = this.courses[course].attendance.length;
-
-      if (0 === length) {
-        return 0;
-      }
-  
-      let countIsPresent = this.courses[course].attendance.filter((isPresent) => isPresent).length;
-  
-      return countIsPresent/length * 100;
+  markAsCompleted(index) {
+    if(false === this.checkIndex(index)) {
+      return;
     }
+
+    this.notes[index].completed = true;
+
+    console.log('Done');
   }
 
-  this.getStudentInfo = function() {
-    return {
-      name: this.name,
-      lastName: this.lastName,
-      yearOfBirth: this.yearOfBirth,
-      courses: this.courses,
-  };
-  }
+  getAllNotes() {
+    if(this.notes.length === 0) {
+      console.log('There is empty')
+      return;
+    } 
+    
+    console.log('List: ');
 
-  this.addCourse = function(course) {
-    if (false === course in this.courses) {
-      this.courses[course] = {
-        grades: [],
-        attendance: []
-      }
-    }
-  }
-
-  this.removeCourse = function(course) {
-    if (true === course in this.courses) {
-      delete this.courses[course];
-    }
-  }
-}
-console.log('----- Task 2 ------');
-
-const student2 = new NewStudent("Kyrylo", "Bohachev", 1999, [2, 3, 4]);
-console.log('StudentInfo student2: ', student2.getStudentInfo());
-student2.addGrade(90, 2);
-student2.addGrade(85, 2);
-student2.addGrade(100, 2);
-student2.addGrade(78, 3);
-student2.addGrade(88, 3);
-student2.addGrade(95, 4);
-student2.addAttendance(true, 2);
-student2.addAttendance(true, 2);
-student2.addAttendance(false, 2);
-student2.addAttendance(true, 3);
-student2.addAttendance(true, 3);
-student2.addAttendance(false, 4);
-console.log('AverageGrade student2 cource 2: ', student2.getAverageGrade(2));
-console.log('AverageGrade student2 cource 3: ', student2.getAverageGrade(3));
-console.log('AverageGrade student2 cource 4: ', student2.getAverageGrade(4));
-
-console.log('AverageAttendance student2 cource 2: ', student2.getAverageAttendance(2));
-console.log('AverageAttendance student2 cource 3: ', student2.getAverageAttendance(3));
-console.log('AverageAttendance student2 cource 4: ', student2.getAverageAttendance(4));
-
-student2.removeCourse(3);
-console.log('StudentInfo student2: ', student2.getStudentInfo());
-student2.addCourse(15);
-console.log('StudentInfo student2: ', student2.getStudentInfo());
-
-/**
- * Створити конструктор Група, яка має список студентів і методи для додавання, видалення студентів, 
- * а також одержання рейтингу студентів за відвідуваністю і успішністю.
- */
-
-function Group(students = []) {
-  this.students = students;
-
-  this.addStudents = function(students) {
-    this.students = this.students.concat(students);
-  }
-
-  this.removeStudents = function(students) {
-    students.forEach(student => {
-      const studentIndex = this.students.indexOf(student);
-
-      if (studentIndex > -1) {
-        this.students.splice(studentIndex, 1);
-      }
-    }
-    );
-  }
-
-  this.getStudentsRatings = function(course) {
-    let ratings = [];
-    this.students.forEach(student => {
-      ratings.push({
-        student:student.name + ' ' + student.lastName,
-        rating: (student.getAverageAttendance(course) + student.getAverageGrade(course))/2
-      })
+    this.notes.forEach(note => {
+      console.log(`Note text: ${note.text}. Status: ${note.completed ? "Done" : "In Progress"}.`)
     });
+  }
 
-    ratings.sort((a, b) => b.rating - a.rating);
+  getNoteCounts() {
+    const totalNotes        = this.notes.length;
+    const notComplitedNotes = this.notes.filter((note) => !note.completed).length;
 
-    return ratings;
+    console.log(`Notes count: ${totalNotes}`);
+    console.log(`Not completed: ${notComplitedNotes}`);
+  }
+
+  checkIndex(index) {
+    if(typeof this.notes[index] === 'undefined') {
+      console.log('Wrong index.');
+
+      return false;
+    }
+    return true;
+  }
+
+  checkIsEmptyStr(text) {
+    if (text.trim() === '') {
+      console.log('There is empty');
+
+      return true;
+    }
+
+    return false;
   }
 }
 
-const student3 = new NewStudent("Roman", "Pop", 1988, [2, 3, 4]);
-student3.addGrade(66, 2);
-student3.addGrade(78, 2);
-student3.addGrade(70, 2);
-student3.addGrade(78, 3);
-student3.addGrade(60, 3);
-student3.addGrade(50, 4);
+console.log('---- Task1 ----');
 
-const student4 = new NewStudent("Allan", "Kos", 2001, [2, 3, 4]);
-student4.addGrade(43, 2);
-student4.addGrade(76, 2);
-student4.addGrade(98, 2);
-student4.addGrade(45, 3);
-student4.addGrade(88, 3);
-student4.addGrade(56, 4);
+const myTodoList = new ToDoList();
 
-const group = new Group([student2]);
+console.log('--- add notes ---');
+myTodoList.addNote("Some text");
+myTodoList.addNote("More text");
+myTodoList.addNote("More some text");
 
-group.addStudents([student3, student4]);
+console.log('--- add empty notes ---');
+myTodoList.addNote(" ");
 
-console.log('----- Task 3 ------');
+console.log('--- mark as completed ---');
+myTodoList.markAsCompleted(0);
 
-console.log('getStudentsRatings cource 2: ', group.getStudentsRatings(2));
-console.log('getStudentsRatings cource 4: ', group.getStudentsRatings(4));
+console.log('--- edit note ---');
+myTodoList.editNote(1, "Edited text");
 
-group.removeStudents([student3]);
+console.log('--- remore note ---');
+myTodoList.removeNote(2);
+myTodoList.removeNote(5);
 
-console.log('getStudentsRatings cource 2: ', group.getStudentsRatings(2));
-console.log('getStudentsRatings cource 4: ', group.getStudentsRatings(4));
+console.log('--- get notes info ---');
+myTodoList.getNoteInfo(0);
+myTodoList.getAllNotes();
+myTodoList.getNoteCounts();
+
+/**
+ * Вам необхідно розширити можливості вашого списку і додати методи для пошуку замітки на ім'я, 
+ * а також методи для сортування нотаток за статусом (спочатку виконані і навпаки).
+ */
+
+class ToDoList_1_0 extends ToDoList {
+  addNote(text, name) {
+    if (true === this.checkIsEmptyStr(text) || true === this.checkIsEmptyStr(name)) {
+      return;
+    }
+
+    const newNote = {
+      name: name,
+      text: text,
+      completed: ToDoList.DEFAULT_COMPLETED
+    };
+
+    this.notes.push(newNote);
+
+    console.log(`New note "${newNote.text}" with name ${this.notes.name} and index ${this.notes.indexOf(newNote)}.`);
+  }
+
+  editNote(index, newText, newName) {
+    if(false === this.checkIndex(index) || true === this.checkIsEmptyStr(newText) || true === this.checkIsEmptyStr(newName)) {
+      return;
+    }
+
+    this.notes[index].text = newText;
+    this.notes[index].name = newName;
+
+    console.log('Edited');
+  }
+
+  getNoteInfo(index) {
+    if(false === this.checkIndex(index)) {
+      return;
+    }
+
+    const note = this.notes[index];
+
+    console.log(`Note name: ${note.name}. Note text: ${note.text}. Status: ${note.completed ? "Done" : "In Progress"}.`)
+  }
+
+  getAllNotes() {
+    if(this.notes.length === 0) {
+      console.log('There is empty')
+      return;
+    } 
+    
+    console.log('List: ');
+
+    this.notes.forEach(note => {
+      console.log(`Note name: ${note.name}. Note text: ${note.text}. Status: ${note.completed ? "Done" : "In Progress"}.`)
+    });
+  }
+
+  getNoteByName(name) {
+    const notesByName = this.notes.filter((note) => note.name.toLowerCase() === name.toLowerCase());
+
+    if (notesByName.length === 0) {
+      console.log(`Note with "${name}" wasn't found.`);
+
+      return;
+    }
+
+    notesByName.forEach(note => {
+      console.log(`Note name: ${note.name}. Note text: ${note.text}. Status: ${note.completed ? "Done" : "In Progress"}.`)
+    });
+  }
+
+  sortNotesByStatus() {
+    const statuses = {
+      true: 1,
+      false:2
+    }
+
+    this.notes.sort((a, b) => statuses[a.completed] - statuses[b.completed]);
+
+    this.getAllNotes();
+  }
+}
+
+console.log('---- Task2 ----');
+
+const myTodoList_1_0 = new ToDoList_1_0();
+
+console.log('--- add notes ---');
+myTodoList_1_0.addNote("Some text", "Name1");
+myTodoList_1_0.addNote("More text", "Name1");
+myTodoList_1_0.addNote("More some text", "Name1");
+myTodoList_1_0.addNote("Some text", "Name2");
+myTodoList_1_0.addNote("More text", "Name2");
+myTodoList_1_0.addNote("More some text", "Name3");
+myTodoList_1_0.addNote("Some text", "Name3");
+myTodoList_1_0.addNote("More text", "Name4");
+myTodoList_1_0.addNote("More some text", "Name4");
+
+console.log('--- add empty notes ---');
+myTodoList_1_0.addNote(" ", "name");
+
+console.log('--- edit note ---');
+myTodoList_1_0.editNote(1, "Edited text", "new name");
+
+console.log('--- get notes info ---');
+myTodoList_1_0.getNoteInfo(0);
+myTodoList_1_0.getAllNotes();
+myTodoList_1_0.getNoteCounts();
+
+console.log('--- get note by name ---');
+myTodoList_1_0.getNoteByName('Name3');
+
+console.log('--- complete notes ---');
+myTodoList_1_0.markAsCompleted(1);
+myTodoList_1_0.markAsCompleted(3);
+myTodoList_1_0.markAsCompleted(7);
+myTodoList_1_0.markAsCompleted(8);
+
+console.log('--- sort notes ---');
+myTodoList_1_0.sortNotesByStatus();
+
+/**
+ * Вам необхідно додати кожній нотатці дату її створення і редагування, 
+ * а також розширити можливості пошуку і сортування, включивши в них можливість роботи з датою.
+ */
+
+class ToDoList_2_0 extends ToDoList_1_0 {
+  addNote(text, name) {
+    if (true === this.checkIsEmptyStr(text) || true === this.checkIsEmptyStr(name)) {
+      return;
+    }
+
+    const newNote = {
+      name: name,
+      text: text,
+      completed: ToDoList.DEFAULT_COMPLETED,
+      createdDate: new Date(),
+      udatedDate: new Date()
+
+    };
+
+    this.notes.push(newNote);
+
+    console.log(`New note "${newNote.text}" with name ${this.notes.name} and index ${this.notes.indexOf(newNote)}.`);
+  }
+
+  editNote(index, newText, newName) {
+    if(false === this.checkIndex(index) || true === this.checkIsEmptyStr(newText) || true === this.checkIsEmptyStr(newName)) {
+      return;
+    }
+
+    this.notes[index].text       = newText;
+    this.notes[index].name       = newName;
+    this.notes[index].udatedDate = new Date();
+
+    console.log('Edited');
+  }
+
+  markAsCompleted(index) {
+    if(false === this.checkIndex(index)) {
+      return;
+    }
+
+    this.notes[index].completed = true;
+    this.notes[index].udatedDate = new Date();
+
+    console.log('Done');
+  }
+
+  sortNotesByCreatedDate() {
+    this.notes.sort((a, b) =>  a.createdDate - b.createdDate);
+
+    this.getAllNotes();
+  }
+
+  sortNotesByUpdatedDate() {
+    this.notes.sort((a, b) =>  a.updatedDate - b.updatedDate);
+
+    this.getAllNotes();
+  }
+}
+
+console.log('---- Task3 ----');
+
+const myTodoList_2_0 = new ToDoList_2_0();
+
+console.log('--- add notes ---');
+myTodoList_2_0.addNote("Some text", "Name1");
+myTodoList_2_0.addNote("More text", "Name1");
+myTodoList_2_0.addNote("More some text", "Name1");
+myTodoList_2_0.addNote("Some text", "Name2");
+myTodoList_2_0.addNote("More text", "Name2");
+myTodoList_2_0.addNote("More some text", "Name3");
+myTodoList_2_0.addNote("Some text", "Name3");
+myTodoList_2_0.addNote("More text", "Name4");
+myTodoList_2_0.addNote("More some text", "Name4");
+
+console.log('--- add empty notes ---');
+myTodoList_2_0.addNote(" ", "name");
+
+console.log('--- edit note ---');
+myTodoList_2_0.editNote(1, "Edited text", "new name");
+myTodoList_2_0.editNote(5, "Edited text 2", "new name 1");
+myTodoList_2_0.editNote(7, "Edited text 3", "new name 2");
+myTodoList_2_0.editNote(9, "Edited text 4", "new name 3");
+
+console.log('--- get notes info ---');
+myTodoList_2_0.getNoteInfo(0);
+myTodoList_2_0.getAllNotes();
+myTodoList_2_0.getNoteCounts();
+
+console.log('--- get note by name ---');
+myTodoList_2_0.getNoteByName('Name3');
+
+console.log('--- complete notes ---');
+myTodoList_2_0.markAsCompleted(1);
+myTodoList_2_0.markAsCompleted(3);
+myTodoList_2_0.markAsCompleted(7);
+myTodoList_2_0.markAsCompleted(8);
+
+console.log('--- sort notes by created date ---');
+myTodoList_2_0.sortNotesByCreatedDate();
+
+console.log('--- sort notes by upated date ---');
+myTodoList_2_0.sortNotesByUpdatedDate();
