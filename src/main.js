@@ -1,67 +1,262 @@
 /**
- * Вам необхідно написати функцію summarize(num), 
- * яка приймає на вхід число і повертає функцію, 
- * яка під час виклику додає це число до аргументу і повертає результат. 
- * Якщо аргумент не передано, то додається одиниця. Наприклад, якщо функція викликається з аргументом 5, 
- * то функція, що повертається, повинна при виклику з аргументом3повернути8(тому що3 + 5 = 8) або6, якщо аргумент не буде передано.
+ * Вам необхідно створити конструктор Студента, у якого мають бути властивості: 
+ * ім'я,прізвище,рік народження,оцінки,відвідуваність,курс. 
+ * Кількість оцінок і відвіданих занять залежить від курсу, на якому займається студент. 
+ * Так само у Студент є методи: додати оцінку,додати відвідування,отримати середню успішність,
+ * отримати середнє відвідування,отримати кількість пройдених занять,змінити курс(мають оновитися дані про курс), 
+ * а такожотримати всю інформацію про студента.
  */
 
-function summarize(argument) {
-  let arg = argument;
+function Student(name, lastName, yearOfBirth, course) {
+  this.name        = name;
+  this.lastName    = lastName;
+  this.yearOfBirth = yearOfBirth;
+  this.grades      = [];
+  this.attendance  = [];
+  this.course      = course;
 
-  return function (number = 1) {
-    arg += number;
+  this.addGrade = function(grade) {
+    this.grades.push(grade);
+  }
 
-    return arg;
+  this.addAttendance = function(isPresent) {
+    this.attendance.push(isPresent);
+  }
+
+  this.getAverageGrade = function() {
+    let gradesSum = 0;
+    const length  = this.grades.length;
+
+    if (0 === length) {
+      return 0;
+    }
+
+    this.grades.forEach(element => gradesSum += element);
+
+    return gradesSum/length;
+  }
+
+  this.getAverageAttendance = function() {
+    const length = this.attendance.length;
+
+    if (0 === length) {
+      return 0;
+    }
+
+    let countIsPresent = this.attendance.filter((isPresent) => isPresent).length;
+
+    return countIsPresent/length * 100;
+  }
+
+  this.changeCourse = function(newCourse) {
+    this.course     = newCourse;
+    this.grades     = [];
+    this.attendance = [];
+  }
+
+  this.getStudentInfo = function() {
+    return {
+      name: this.name,
+      lastName: this.lastName,
+      yearOfBirth: this.yearOfBirth,
+      course: this.course,
+      grades: this.grades,
+      attendance: this.attendance
+  };
   }
 }
 
-const sum = summarize(1);
+console.log('----- Task 1 ------');
 
-console.log('task1', sum(3)); //4
-console.log('task1', sum());  //5
-console.log('task1', sum(5)); //10
-console.log('task1', sum(7)); //17
-console.log('task1', sum(9)); //26
+const student1 = new Student("Alona", "Ivanova", 2000, 2);
+student1.addGrade(90);
+student1.addGrade(85);
+student1.addAttendance(true);
+student1.addAttendance(true);
+student1.addAttendance(false);
+console.log('AverageGrade student1: ', student1.getAverageGrade());
+console.log('AverageAttendance student1: ', student1.getAverageAttendance());
+console.log('StudentInfo student1: ', student1.getStudentInfo());
+student1.changeCourse(3);
+console.log('StudentInfo student1: ', student1.getStudentInfo());
 
 /**
- * Вам необхідно написати функцію counter(startValue, step), 
- * яка приймає на вхід два параметри - стартове значення лічильника і його крок. 
- * Функція повертає нову функцію, яка при кожному виклику збільшує лічильник на значення і повертає його поточне значення. 
- * Лічильник повинен мати методи increment, decrement і reset, які збільшують або зменшують значення на stepі 
- * скидають значення до стартового, відповідно.
+ * Додати Студенту можливість навчатися на кількох курсах з можливістю додавання і видалення курсу.
  */
 
-function counter(startValue, step) {
-  let count = startValue;
+function NewStudent(name, lastName, yearOfBirth, courses) {
+  this.name        = name;
+  this.lastName    = lastName;
+  this.yearOfBirth = yearOfBirth;
+  this.courses     = {};
 
-  function counChange() {}
+  courses.forEach(element => {
+    if(false === element in this.courses) {
+      this.courses[element] = {
+        grades: [],
+        attendance: []
+      }
+    }
+  });
 
-  counChange.increment = function () {
-    count += step;
-
-    return count;
+  this.addGrade = function(grade, course) {
+    if (true === course in this.courses) {
+      this.courses[course].grades.push(grade);
+    }
   }
 
-  counChange.decrement = function () {
-    count -= step;
-
-    return count;
+  this.addAttendance = function(isPresent, course) {
+    if (true === course in this.courses) {
+      this.courses[course].attendance.push(isPresent);
+    }  
   }
 
-  counChange.reset = function () {
-    count = startValue;
+  this.getAverageGrade = function(course) {
+    if (true === course in this.courses) {
+      let gradesSum = 0;
+      const length  = this.courses[course].grades.length;
 
-    return count;
+    if (0 === length) {
+      return 0;
+    }
+
+    this.courses[course].grades.forEach(element => gradesSum += element);
+
+    return gradesSum/length;
+    }
   }
 
-  return counChange;
+  this.getAverageAttendance = function(course) {
+    if (true === course in this.courses) {
+      const length = this.courses[course].attendance.length;
+
+      if (0 === length) {
+        return 0;
+      }
+  
+      let countIsPresent = this.courses[course].attendance.filter((isPresent) => isPresent).length;
+  
+      return countIsPresent/length * 100;
+    }
+  }
+
+  this.getStudentInfo = function() {
+    return {
+      name: this.name,
+      lastName: this.lastName,
+      yearOfBirth: this.yearOfBirth,
+      courses: this.courses,
+  };
+  }
+
+  this.addCourse = function(course) {
+    if (false === course in this.courses) {
+      this.courses[course] = {
+        grades: [],
+        attendance: []
+      }
+    }
+  }
+
+  this.removeCourse = function(course) {
+    if (true === course in this.courses) {
+      delete this.courses[course];
+    }
+  }
+}
+console.log('----- Task 2 ------');
+
+const student2 = new NewStudent("Kyrylo", "Bohachev", 1999, [2, 3, 4]);
+console.log('StudentInfo student2: ', student2.getStudentInfo());
+student2.addGrade(90, 2);
+student2.addGrade(85, 2);
+student2.addGrade(100, 2);
+student2.addGrade(78, 3);
+student2.addGrade(88, 3);
+student2.addGrade(95, 4);
+student2.addAttendance(true, 2);
+student2.addAttendance(true, 2);
+student2.addAttendance(false, 2);
+student2.addAttendance(true, 3);
+student2.addAttendance(true, 3);
+student2.addAttendance(false, 4);
+console.log('AverageGrade student2 cource 2: ', student2.getAverageGrade(2));
+console.log('AverageGrade student2 cource 3: ', student2.getAverageGrade(3));
+console.log('AverageGrade student2 cource 4: ', student2.getAverageGrade(4));
+
+console.log('AverageAttendance student2 cource 2: ', student2.getAverageAttendance(2));
+console.log('AverageAttendance student2 cource 3: ', student2.getAverageAttendance(3));
+console.log('AverageAttendance student2 cource 4: ', student2.getAverageAttendance(4));
+
+student2.removeCourse(3);
+console.log('StudentInfo student2: ', student2.getStudentInfo());
+student2.addCourse(15);
+console.log('StudentInfo student2: ', student2.getStudentInfo());
+
+/**
+ * Створити конструктор Група, яка має список студентів і методи для додавання, видалення студентів, 
+ * а також одержання рейтингу студентів за відвідуваністю і успішністю.
+ */
+
+function Group(students = []) {
+  this.students = students;
+
+  this.addStudents = function(students) {
+    this.students = this.students.concat(students);
+  }
+
+  this.removeStudents = function(students) {
+    students.forEach(student => {
+      const studentIndex = this.students.indexOf(student);
+
+      if (studentIndex > -1) {
+        this.students.splice(studentIndex, 1);
+      }
+    }
+    );
+  }
+
+  this.getStudentsRatings = function(course) {
+    let ratings = [];
+    this.students.forEach(student => {
+      ratings.push({
+        student:student.name + ' ' + student.lastName,
+        rating: (student.getAverageAttendance(course) + student.getAverageGrade(course))/2
+      })
+    });
+
+    ratings.sort((a, b) => b.rating - a.rating);
+
+    return ratings;
+  }
 }
 
-const newCounter = counter(1, 5);
+const student3 = new NewStudent("Roman", "Pop", 1988, [2, 3, 4]);
+student3.addGrade(66, 2);
+student3.addGrade(78, 2);
+student3.addGrade(70, 2);
+student3.addGrade(78, 3);
+student3.addGrade(60, 3);
+student3.addGrade(50, 4);
 
-console.log('task2', newCounter.increment()); //6
-console.log('task2', newCounter.increment()); //11
-console.log('task2', newCounter.decrement()); //6
-console.log('task2', newCounter.reset());     //1
-console.log('task2', newCounter.increment()); //5
+const student4 = new NewStudent("Allan", "Kos", 2001, [2, 3, 4]);
+student4.addGrade(43, 2);
+student4.addGrade(76, 2);
+student4.addGrade(98, 2);
+student4.addGrade(45, 3);
+student4.addGrade(88, 3);
+student4.addGrade(56, 4);
+
+const group = new Group([student2]);
+
+group.addStudents([student3, student4]);
+
+console.log('----- Task 3 ------');
+
+console.log('getStudentsRatings cource 2: ', group.getStudentsRatings(2));
+console.log('getStudentsRatings cource 4: ', group.getStudentsRatings(4));
+
+group.removeStudents([student3]);
+
+console.log('getStudentsRatings cource 2: ', group.getStudentsRatings(2));
+console.log('getStudentsRatings cource 4: ', group.getStudentsRatings(4));
